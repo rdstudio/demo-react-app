@@ -1,3 +1,17 @@
+Tutorial from: https://ibaslogic.com/blog/react-tutorial-for-beginners/
+
+In this tutorial we are using "Prop Drilling" to get our properties into the child components
+
+
+If we are not changing or modifying the "state" in a component we can use a function component instead of class based.
+
+One helpful tip to note is that a class component that only has markup within the render() method can safely be converted to a function component.
+
+
+============================================
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
