@@ -2,6 +2,11 @@ import React from "react"
 
 class TodoItem extends React.Component {
 
+  componentWillUnmount() {
+    alert("Item about to be deleted");
+  }
+
+
   render() {
 
     // Destructuring the properties (helps so you dont have to write this.props.todo before every property)

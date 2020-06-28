@@ -1,5 +1,5 @@
 import React from "react"
-import { v4 as uuidv4 } from "uuid"
+import axios from "axios"
 import TodosList from "./TodosList"
 import Header from "./Header"
 import InputTodo from "./InputTodo"
@@ -8,23 +8,8 @@ class TodoContainer extends React.Component {
 
   // State
   state = {
-    todos: [
-      {
-        id: uuidv4(),
-        title: "Setup dev environment",
-        completed: true
-      },
-      {
-        id: uuidv4(),
-        title: "Develop website and add content",
-        completed: false
-      },
-      {
-        id: uuidv4(),
-        title: "Deploy to live server",
-        completed: false
-      }
-    ]
+    todos: [],
+    show: false
   };
 
   handleChange = (id) => {
@@ -34,30 +19,44 @@ class TodoContainer extends React.Component {
           todo.completed = !todo.completed
         }
         return todo;
-      })
+      }),
+      show: !this.state.show,
     })
   }
 
   delTodo = (id) => {
-    this.setState({
-      todos: [
-        ...this.state.todos.filter(todo => {
-          return todo.id !== id;
+    axios
+      .delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+      .then(response =>
+        this.setState({
+          todos: [
+            ...this.state.todos.filter(todo => {
+              return todo.id !== id
+            })
+          ]
         })
-      ]
-    });
+      )
   }
 
   addTodoItem = title => {
-    const newTodo = {
-      id: uuidv4(),
-      title: title,
-      completed: false
-    };
+    axios
+      .post("https://jsonplaceholder.typicode.com/todos", {
+        title: title,
+        completed: false
+      })
+      .then(response =>
+        this.setState({
+          todos: [...this.state.todos, response.data]
+        })
+      )
+  }
 
-    this.setState({
-      todos: [...this.state.todos, newTodo]
-    });
+
+  // Using a new lifecycle stage method componentDidMount
+
+  componentDidMount() {
+    axios.get("https://jsonplaceholder.typicode.com/todos?_limit=10")
+      .then(response => this.setState({ todos: response.data }));
   }
 
   render() {
@@ -65,7 +64,7 @@ class TodoContainer extends React.Component {
 
       // returned JSX needs to be in a container of some sort, either <div></div>, <React.Fragment></React.Fragment> or <></>
       <div className="container">
-        <Header />
+        <Header headerSpan={ this.state.show } />
         <InputTodo addTodoProps={ this.addTodoItem } />
         <TodosList
           todos={ this.state.todos }
