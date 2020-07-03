@@ -8,6 +8,7 @@ class InputTodo extends Component {
     title: ""
   }
 
+  // This is used to allow the user to type into the field.
   onChange = e => {
     this.setState({
       [e.target.name]: e.target.value
